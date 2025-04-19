@@ -1,0 +1,128 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: 
+  name: xgl # <-- Change this to the name of your deployment
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: xgl # <-- Change this to the name of your deployment
+  template:
+    metadata:
+      labels:
+        app: xgl # <-- Change this to the name of your deployment
+    spec:
+      hostname: xgl # <-- Change this to the name of your deployment
+      terminationGracePeriodSeconds: 15 # for graceful shutdown
+      containers:
+      - name: xgl
+        image: ghcr.io/selkies-project/nvidia-glx-desktop:22.04
+        env:
+        - name: TZ
+          value: "UTC"
+        - name: DISPLAY
+          value: ":0"
+        - name: DISPLAY_SIZEW
+          value: "1920"
+        - name: DISPLAY_SIZEH
+          value: "1080"
+        - name: DISPLAY_REFRESH
+          value: "60"
+        - name: DISPLAY_DPI
+          value: "96"
+        - name: DISPLAY_CDEPTH
+          value: "24"
+        - name: VIDEO_PORT
+          value: "DFP"
+        - name: PASSWD # <-- Password is stored in a secret in this case. To edit, you can do `kubectl edit secret my-pass`
+          valueFrom:
+            secretKeyRef:
+              name: my-pass
+              key: my-pass
+        - name: SELKIES_ENCODER
+          value: "nvh264enc"
+        - name: SELKIES_ENABLE_RESIZE
+          value: "false"
+        - name: SELKIES_VIDEO_BITRATE
+          value: "16000"
+        - name: SELKIES_FRAMERATE
+          value: "60"
+        - name: SELKIES_AUDIO_BITRATE
+          value: "128000"
+          # Uncomment if network conditions rapidly fluctuate
+          # - name: SELKIES_CONGESTION_CONTROL
+          #   value: "true"
+        - name: SELKIES_ENABLE_BASIC_AUTH
+          value: "true"
+        - name: SELKIES_TURN_REST_URI
+          value: "http://turn-rest.nrp-nautilus.io"
+        - name: SELKIES_TURN_PROTOCOL
+          value: "tcp"
+        - name: SELKIES_TURN_TLS
+          value: "false"
+        stdin: true
+        tty: true
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        resources: # <-- Configure your resource limits and requests here
+          limits:
+            memory: 64Gi
+            cpu: "16"
+            nvidia.com/gpu: 1
+          requests:
+            memory: 32Gi
+            cpu: "8"
+        livenessProbe: # <-- If you want to change the liveness probe, do it here
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        
+        volumeMounts:
+        - mountPath: /dev/shm
+          name: dshm
+        - mountPath: /cache
+          name: xgl-cache-vol
+        - mountPath: /home/ubuntu/persistent
+          name: xgl-root-vol
+        - mountPath: /pvc/dog-rl
+          name: output-files-dog-rl
+        - mountPath: /pvc/isaac-sim
+          name: output-files-isaac-sim
+        - mountPath: /pvc/isaac-lab
+          name: output-files-isaac-lab
+      dnsPolicy: None
+      dnsConfig:
+        nameservers:
+        - 8.8.8.8
+        - 8.8.4.4
+      volumes: # <-- Configure your volumes here. This is what we use as an example
+      - name: dshm
+        emptyDir:
+          medium: Memory
+      - name: xgl-cache-vol
+#        emptyDir: {}
+      - name: xgl-root-vol
+#        emptyDir: {}
+      - name: output-files-dog-rl
+        persistentVolumeClaim:
+          claimName: dog-rl
+      - name: output-files-isaac-sim
+        persistentVolumeClaim:
+          claimName: isaac-sim-pvc
+      - name: output-files-isaac-lab
+        persistentVolumeClaim:
+          claimName: isaac-lab-pvc
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nvidia.com/gpu.product
+                operator: In
+                values:
+                - NVIDIA-GeForce-RTX-3090
