@@ -74,8 +74,8 @@ spec:
             cpu: "16"
             nvidia.com/gpu: 1
           requests:
-            memory: 32Gi
-            cpu: "8"
+            memory: 16Gi
+            cpu: "4"
         livenessProbe: # <-- If you want to change the liveness probe, do it here
           tcpSocket:
             port: 8080
@@ -89,12 +89,12 @@ spec:
           name: xgl-cache-vol
         - mountPath: /home/ubuntu/persistent
           name: xgl-root-vol
-        - mountPath: /pvc/dog-rl
+        - mountPath: /pvc/dog-food
           name: output-files-dog-rl
         - mountPath: /pvc/isaac-sim
           name: output-files-isaac-sim
-        - mountPath: /pvc/isaac-lab
-          name: output-files-isaac-lab
+        - mountPath: /pvc/project-files
+          name: pvc-project-files
       dnsPolicy: None
       dnsConfig:
         nameservers:
@@ -114,9 +114,9 @@ spec:
       - name: output-files-isaac-sim
         persistentVolumeClaim:
           claimName: isaac-sim-pvc
-      - name: output-files-isaac-lab
+      - name: pvc-project-files
         persistentVolumeClaim:
-          claimName: isaac-lab-pvc
+          claimName: pvc-project-files
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -125,4 +125,4 @@ spec:
               - key: nvidia.com/gpu.product
                 operator: In
                 values:
-                - NVIDIA-GeForce-RTX-3090
+                - NVIDIA-GeForce-RTX-4090

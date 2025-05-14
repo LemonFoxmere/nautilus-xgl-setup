@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata: 
-  name: xgl-alt4
+  name: dog1
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: xgl-alt4
+      app: dog1
   template:
     metadata:
       labels:
-        app: xgl-alt4
+        app: dog1
     spec:
-      hostname: xgl-alt4
+      hostname: dog1
       # hostNetwork: true
       terminationGracePeriodSeconds: 15 # for graceful shutdown
       containers:
@@ -74,7 +74,7 @@ spec:
           limits:
             memory: 64Gi
             cpu: "16"
-            nvidia.com/gpu: 2
+            nvidia.com/gpu: 1
           requests:
             memory: 16Gi
             cpu: "4"
@@ -91,12 +91,12 @@ spec:
           name: xgl-cache-vol
         - mountPath: /home/ubuntu/persistent
           name: xgl-root-vol
-        - mountPath: /pvc/dog-rl
+        - mountPath: /pvc/dog-food
           name: output-files-dog-rl
         - mountPath: /pvc/isaac-sim
           name: output-files-isaac-sim
-        - mountPath: /pvc/isaac-lab
-          name: output-files-isaac-lab
+        - mountPath: /pvc/project-files
+          name: pvc-project-files
       dnsPolicy: None
       dnsConfig:
         nameservers:
@@ -116,9 +116,9 @@ spec:
       - name: output-files-isaac-sim
         persistentVolumeClaim:
           claimName: isaac-sim-pvc
-      - name: output-files-isaac-lab
+      - name: pvc-project-files
         persistentVolumeClaim:
-          claimName: isaac-lab-pvc
+          claimName: pvc-project-files
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -127,4 +127,4 @@ spec:
               - key: nvidia.com/gpu.product
                 operator: In
                 values:
-                - NVIDIA-GeForce-RTX-3090
+                - NVIDIA-GeForce-RTX-4090
