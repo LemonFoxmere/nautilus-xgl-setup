@@ -1,33 +1,33 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: xgl-ing # <-- This is your ingress name. It can be anything you want.
+  name: main # <-- This is your ingress name. It can be anything you want.
 spec:
   ingressClassName: haproxy
   rules:
-  - host: YOUR-ENDPOINT.nrp-nautilus.io # <-- Change the endpoint.
+  - host: YOUR-ENDPOINT.hare-xgl.nrp-nautilus.io # <-- Change the endpoint.
     http:
       paths:
       - backend:
           service:
-            name: xgl-svc # <-- Change this to the service name you want to use. It must match EXACTLY.
+            name: <your-name>-svc # <-- Change this to the service name you want to use. It must match EXACTLY.
             port:
               name: http
         path: /
         pathType: ImplementationSpecific
   tls:
   - hosts: # <-- List out all your endpoints under this section
-    - YOUR-ENDPOINT.nrp-nautilus.io # <-- Change the endpoint.
+    - YOUR-ENDPOINT.hare-xgl.nrp-nautilus.io # <-- Change the endpoint.
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: xgl-svc # <-- This is your service name. It can be anything you want.
+  name: <your-name>-svc # <-- This is your service name. It can be anything you want.
   labels:
-    app: xgl-svc # <-- Also your service name, make it the same as the one you chose above.
+    app: <your-name>-svc # <-- Also your service name, make it the same as the one you chose above.
 spec:
   selector:
-    app: xgl  # <-- Change this your pods' labels. It must match EXACTLY.
+    app: <your-name>-xgl  # <-- Change this to your pods' labels. It must match EXACTLY.
               # (e.g., if your pod has a prefix of "main-xgl", your selector would select for "main-xgl")
   ports:
   - name: http
