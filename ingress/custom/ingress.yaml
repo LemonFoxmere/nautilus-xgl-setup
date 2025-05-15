@@ -1,0 +1,200 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: main
+spec:
+  ingressClassName: haproxy
+  rules:
+  - host: lemon.hare-xgl.nrp-nautilus.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: lemon-svc
+            port:
+              name: http
+        path: /
+        pathType: ImplementationSpecific
+  - host: oliver.hare-xgl.nrp-nautilus.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: oliver-svc
+            port:
+              name: http
+        path: /
+        pathType: ImplementationSpecific
+  - host: zi.hare-xgl.nrp-nautilus.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: zi-svc
+            port:
+              name: http
+        path: /
+        pathType: ImplementationSpecific
+  - host: caleb.hare-xgl.nrp-nautilus.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: caleb-svc
+            port:
+              name: http
+        path: /
+        pathType: ImplementationSpecific
+  - host: anderson.hare-xgl.nrp-nautilus.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: anderson-svc
+            port:
+              name: http
+        path: /
+        pathType: ImplementationSpecific
+  - host: anthony.hare-xgl.nrp-nautilus.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: anthony-svc
+            port:
+              name: http
+        path: /
+        pathType: ImplementationSpecific
+  - host: hare-xgl.nrp-nautilus.io
+    http:
+      paths:
+      - backend:
+          service:
+            name: main-svc
+            port:
+              name: http
+        path: /
+        pathType: ImplementationSpecific
+
+
+  tls:
+  - hosts:
+    - lemon.hare-xgl.nrp-nautilus.io
+    - oliver.hare-xgl.nrp-nautilus.io
+    - zi.hare-xgl.nrp-nautilus.io
+    - caleb.hare-xgl.nrp-nautilus.io
+    - anderson.hare-xgl.nrp-nautilus.io
+    - anthony.hare-xgl.nrp-nautilus.io
+    - hare-xgl.nrp-nautilus.io
+
+--- # -----------------=== SERVICE DEFINITIONS ===-----------------
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: lemon-svc
+  labels:
+    app: lemon-svc
+spec:
+  selector:
+    app: lemon-xgl # match deployment's pod labels
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: oliver-svc
+  labels:
+    app: oliver-svc
+spec:
+  selector:
+    app: oliver-xgl # match deployment's pod labels
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: zi-svc
+  labels:
+    app: zi-svc
+spec:
+  selector:
+    app: zi-xgl # match deployment's pod labels
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: caleb-svc
+  labels:
+    app: caleb-svc
+spec:
+  selector:
+    app: caleb-xgl # match deployment's pod labels
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: anderson-svc
+  labels:
+    app: anderson-svc
+spec:
+  selector:
+    app: anderson-xgl # match deployment's pod labels
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: anthony-svc
+  labels:
+    app: anthony-svc
+spec:
+  selector:
+    app: anthony-xgl # match deployment's pod labels
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: main-svc
+  labels:
+    app: main-svc
+spec:
+  selector:
+    app: main-xgl # match deployment's pod labels
+  ports:
+  - name: http
+    protocol: TCP
+    port: 8080

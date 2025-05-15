@@ -1,21 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata: 
-  name: dog1
+  name: anthony # <-- Replace "anthony" with your name found in /ingress/ingress.yaml
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: dog1
+      app: anthony-xgl # <-- Replace "anthony" with your name found in /ingress/ingress.yaml
   template:
     metadata:
       labels:
-        app: dog1
+        app: anthony-xgl # <-- Replace "anthony" with your name found in /ingress/ingress.yaml
     spec:
-      hostname: dog1
-      # hostNetwork: true
+      hostname: anthony-xgl # <-- Replace "anthony" with your name found in /ingress/ingress.yaml
       terminationGracePeriodSeconds: 15 # for graceful shutdown
       containers:
       - name: xgl
@@ -37,7 +36,7 @@ spec:
           value: "24"
         - name: VIDEO_PORT
           value: "DFP"
-        - name: PASSWD
+        - name: PASSWD # <-- Password is stored in a secret in this case. To edit, you can do `kubectl edit secret my-pass`
           valueFrom:
             secretKeyRef:
               name: my-pass
@@ -51,11 +50,10 @@ spec:
         - name: SELKIES_FRAMERATE
           value: "60"
         - name: SELKIES_AUDIO_BITRATE
-          value: "128000"
+          value: "44100"
           # Uncomment if network conditions rapidly fluctuate
           # - name: SELKIES_CONGESTION_CONTROL
           #   value: "true"
-          # Enable Basic Authentication from the web interface
         - name: SELKIES_ENABLE_BASIC_AUTH
           value: "true"
         - name: SELKIES_TURN_REST_URI
@@ -70,7 +68,7 @@ spec:
         - name: http
           containerPort: 8080
           protocol: TCP
-        resources:
+        resources: # <-- Configure your resource limits and requests here
           limits:
             memory: 64Gi
             cpu: "16"
@@ -78,7 +76,7 @@ spec:
           requests:
             memory: 16Gi
             cpu: "4"
-        livenessProbe:
+        livenessProbe: # <-- If you want to change the liveness probe, do it here
           tcpSocket:
             port: 8080
           initialDelaySeconds: 15
@@ -91,6 +89,7 @@ spec:
           name: xgl-cache-vol
         - mountPath: /home/ubuntu/persistent
           name: xgl-root-vol
+        # The actualy important mount points:
         - mountPath: /pvc/dog-food
           name: output-files-dog-rl
         - mountPath: /pvc/isaac-sim
@@ -102,7 +101,7 @@ spec:
         nameservers:
         - 8.8.8.8
         - 8.8.4.4
-      volumes:
+      volumes: # <-- Configure your volumes here. This is what we use as an example
       - name: dshm
         emptyDir:
           medium: Memory

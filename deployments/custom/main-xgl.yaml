@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata: 
-  name: xgl # <-- Change this to the name of your deployment
+  name: main # <-- Replace "main" with your name found in /ingress/ingress.yaml
 spec:
   replicas: 1
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      app: xgl # <-- Change this to the name of your deployment
+      app: main-xgl # <-- Replace "main" with your name found in /ingress/ingress.yaml
   template:
     metadata:
       labels:
-        app: xgl # <-- Change this to the name of your deployment
+        app: main-xgl # <-- Replace "main" with your name found in /ingress/ingress.yaml
     spec:
-      hostname: xgl # <-- Change this to the name of your deployment
+      hostname: main-xgl # <-- Replace "main" with your name found in /ingress/ingress.yaml
       terminationGracePeriodSeconds: 15 # for graceful shutdown
       containers:
       - name: xgl
@@ -50,7 +50,7 @@ spec:
         - name: SELKIES_FRAMERATE
           value: "60"
         - name: SELKIES_AUDIO_BITRATE
-          value: "128000"
+          value: "44100"
           # Uncomment if network conditions rapidly fluctuate
           # - name: SELKIES_CONGESTION_CONTROL
           #   value: "true"
@@ -89,6 +89,7 @@ spec:
           name: xgl-cache-vol
         - mountPath: /home/ubuntu/persistent
           name: xgl-root-vol
+        # The actualy important mount points:
         - mountPath: /pvc/dog-food
           name: output-files-dog-rl
         - mountPath: /pvc/isaac-sim
