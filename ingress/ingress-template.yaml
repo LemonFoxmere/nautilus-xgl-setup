@@ -16,7 +16,7 @@ spec:
         path: /
         pathType: ImplementationSpecific
   tls:
-  - hosts:
+  - hosts: # <-- List out all your endpoints under this section
     - YOUR-ENDPOINT.nrp-nautilus.io # <-- Change the endpoint.
 ---
 apiVersion: v1
@@ -24,10 +24,11 @@ kind: Service
 metadata:
   name: xgl-svc # <-- This is your service name. It can be anything you want.
   labels:
-    app: xgl-svc # <-- Also your service name, make it the same as the above.
+    app: xgl-svc # <-- Also your service name, make it the same as the one you chose above.
 spec:
   selector:
-    app: xgl # <-- Change this to the name of your deployment. It must match EXACTLY.
+    app: xgl  # <-- Change this your pods' labels. It must match EXACTLY.
+              # (e.g., if your pod has a prefix of "main-xgl", your selector would select for "main-xgl")
   ports:
   - name: http
     protocol: TCP

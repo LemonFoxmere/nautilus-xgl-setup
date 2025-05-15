@@ -1,6 +1,6 @@
 # NVIDIA GLX Desktop Environment Setup on NRP Nautilus (Kubernetes)
 
-These configs help you quickly set up [NVIDIA GLX desktop environments](https://github.com/selkies-project/docker-nvidia-glx-desktop) using Kubernetes on NRP Nautilus.
+These configs help you quickly set up [NVIDIA GLX desktop environments](https://github.com/selkies-project/docker-nvidia-glx-desktop) using Kubernetes on NRP Nautilus. The current configuration is designed to work with the Dog RL project in UCSC's Hare Lab, but you can adapt it to work with your workflow.
 
 With these files, you can:
 
@@ -16,10 +16,12 @@ The current setup includes four deployments per ingress. If you need more, just 
 
 ### Setting up Ingress and Services
 
-To get started, run:
+To get started, duplicate the `ingress/ingress-template.yaml` file, rename it to something you like, and configure your services as needed — the comments in the config should help guide you through on how to do that.
+
+Next, you can deploy your ingress and services by running:
 
 ```bash
-kubectl apply -f ingress/xgl-ingress.yaml
+kubectl apply -f ingress/<your-custom-ingress>.yaml
 ```
 
 Check if everything worked:
@@ -37,10 +39,12 @@ Services will initially show no active endpoints since no deployments are runnin
 
 ### Creating a Desktop Deployment
 
-Launch a new desktop:
+In the same fashion as the ingress and services, duplicate the `deployments/xgl-deployment-template.yaml` file, rename it to something you like, and configure your deployment and pod template as needed. Again, the comments in there should help guide you through on how to do that.
+
+Now, you can launch a new desktop by deploying your deployment:
 
 ```bash
-kubectl apply -f deployments/xgl-deploy-main.yaml
+kubectl apply -f deployments/<your-custom-deployment>.yaml
 ```
 
 Check deployment status:
@@ -53,6 +57,8 @@ kubectl get pods
 kubectl describe deploy <deployment-name>
 kubectl describe pod <pod-name>
 ```
+
+At this point, the deployment should automatically spin up a new pod, which will be running the Nvidia GLX Desktop Environment along with the Selkies-GStreamer service for streaming. When the pod eventually boots up and shows a status of `[running]`, the service that you created earlier should automatically be able to find the matching pod and connect an endpoint to it. Now, you should be able to go to the host that you configured in your ingress and start using your desktop.
 
 If something looks wrong, check pod logs:
 
@@ -103,7 +109,7 @@ kubectl delete ingress <ingress-name>
 kubectl apply -f ingress/xgl-ingress.yaml
 ```
 
-This fixes most weird connection problems.
+This fixes most weird connection problems. If for some reason the stream is still giving you a connection error message (which is common after AFKing for too long or your network hiccups at a bad time), it's most likely Nautilus' TURN server holding onto stale sessions without knowing that they expired. If this happens, delete all deployments and pods, and wait a full 10 minutes before re-deploying and attempting to connect again.
 
 ## References
 
@@ -112,3 +118,9 @@ This fixes most weird connection problems.
 - Selkies GStreamer
   - https://github.com/selkies-project/selkies
   - https://github.com/selkies-project/selkies/blob/main/docs/firewall.md#turn-server
+    – https://datatracker.ietf.org/doc/html/rfc5766section-14.2
+    – https://help.hcl-software.com/sametime/11.6/admin/turnserver_ubuntu.html
+    – https://github.com/selkies-project/selkies/blob/main/docs/component.md
+    – https://nrp.ai/documentation/userdocs/running/gui-desktop/
+    – https://gstreamer.freedesktop.org/documentation/webrtc/?gi-language=c
+    – https://www.reddit.com/r/WebRTC/comments/1ii3wwm/ice_connection_gets_cancelled_just_after_10
