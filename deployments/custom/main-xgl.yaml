@@ -74,7 +74,7 @@ spec:
             cpu: "16"
             nvidia.com/gpu: 1
           requests:
-            memory: 16Gi
+            memory: 8Gi
             cpu: "4"
         livenessProbe: # <-- If you want to change the liveness probe, do it here
           tcpSocket:
@@ -126,4 +126,4 @@ spec:
               - key: nvidia.com/gpu.product
                 operator: In
                 values:
-                - NVIDIA-GeForce-RTX-4090
+                - NVIDIA-GeForce-RTX-3090

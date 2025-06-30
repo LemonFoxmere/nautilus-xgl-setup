@@ -72,15 +72,10 @@ spec:
           limits:
             memory: 64Gi
             cpu: "16"
-            nvidia.com/gpu: 1
+            nvidia.com/gpu: "1"
           requests:
-            memory: 16Gi
+            memory: 12Gi
             cpu: "4"
-        livenessProbe: # <-- If you want to change the liveness probe, do it here
-          tcpSocket:
-            port: 8080
-          initialDelaySeconds: 15
-          periodSeconds: 10
         
         volumeMounts:
         - mountPath: /dev/shm
@@ -126,4 +121,4 @@ spec:
               - key: nvidia.com/gpu.product
                 operator: In
                 values:
-                - NVIDIA-GeForce-RTX-4090
+                - NVIDIA-GeForce-RTX-3090
