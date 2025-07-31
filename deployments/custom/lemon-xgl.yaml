@@ -43,6 +43,7 @@ spec:
               key: my-pass
         - name: SELKIES_ENCODER
           value: "nvh264enc"
+          # value: "x264enc"
         - name: SELKIES_ENABLE_RESIZE
           value: "false"
         - name: SELKIES_VIDEO_BITRATE
