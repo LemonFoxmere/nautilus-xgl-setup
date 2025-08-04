@@ -42,8 +42,8 @@ spec:
               name: my-pass
               key: my-pass
         - name: SELKIES_ENCODER
-          value: "nvh264enc"
-          # value: "x264enc"
+          # value: "nvh264enc"
+          value: "x264enc"
         - name: SELKIES_ENABLE_RESIZE
           value: "false"
         - name: SELKIES_VIDEO_BITRATE
@@ -75,8 +75,8 @@ spec:
             cpu: "16"
             nvidia.com/gpu: "1"
           requests:
-            memory: 12Gi
-            cpu: "4"
+            memory: 8Gi
+            cpu: "2"
         
         volumeMounts:
         - mountPath: /dev/shm

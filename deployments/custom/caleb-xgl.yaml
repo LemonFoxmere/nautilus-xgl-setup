@@ -42,7 +42,7 @@ spec:
               name: my-pass
               key: my-pass
         - name: SELKIES_ENCODER
-          value: "nvh264enc"
+          value: "x264enc"
         - name: SELKIES_ENABLE_RESIZE
           value: "false"
         - name: SELKIES_VIDEO_BITRATE
@@ -74,8 +74,8 @@ spec:
             cpu: "16"
             nvidia.com/gpu: 1
           requests:
-            memory: 16Gi
-            cpu: "4"
+            memory: 8Gi
+            cpu: "2"
         livenessProbe: # <-- If you want to change the liveness probe, do it here
           tcpSocket:
             port: 8080
@@ -126,4 +126,4 @@ spec:
               - key: nvidia.com/gpu.product
                 operator: In
                 values:
-                - NVIDIA-GeForce-RTX-4090
+                - NVIDIA-GeForce-RTX-3090
